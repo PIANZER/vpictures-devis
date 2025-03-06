@@ -13,11 +13,11 @@ import logo from "./assets/logo.svg";
 import background from "./assets/background.png";
 
 function App() {
-  const [selectedTypes, setSelectedTypes] = useState<ProjectType[]>(["group"]);
+  const [selectedTypes, setSelectedTypes] = useState<ProjectType[]>([]);
   const [priceModifiers, setPriceModifiers] = useState<PriceModifier>({
-    actors: 1,
+    actors: 0,
     extras: 1,
-    duration: 1,
+    duration: 0.5,
     shootingServer: false,
     guideline: false,
     script: false,
@@ -129,28 +129,32 @@ function App() {
               onTypeChange={setSelectedTypes}
             />
 
-            <div className="space-y-8">
-              {sliders.map((slider) => (
-                <PriceSlider key={slider.label} {...slider} />
-              ))}
-            </div>
+            {selectedTypes.length > 0 && (
+              <>
+                <div className="space-y-8">
+                  {sliders.map((slider) => (
+                    <PriceSlider key={slider.label} {...slider} />
+                  ))}
+                </div>
 
-            <AdditionalOptions
-              priceModifiers={priceModifiers}
-              onChange={setPriceModifiers}
-            />
+                <AdditionalOptions
+                  priceModifiers={priceModifiers}
+                  onChange={setPriceModifiers}
+                />
 
-            <DeliveryInfo
-              deliveryTime={deliveryTime}
-              priceWarning={priceWarning}
-            />
+                <DeliveryInfo
+                  deliveryTime={deliveryTime}
+                  priceWarning={priceWarning}
+                />
 
-            <div className="flex justify-between items-center pt-6 mt-8 border-t-2 border-cyan-200">
-              <span className="text-2xl font-bold">Total TTC :</span>
-              <span className="text-4xl font-bold text-cyan-600">
-                {total.toFixed(2)}€
-              </span>
-            </div>
+                <div className="flex justify-between items-center pt-6 mt-8 border-t-2 border-cyan-200">
+                  <span className="text-2xl font-bold">Total TTC :</span>
+                  <span className="text-4xl font-bold text-cyan-600">
+                    {total.toFixed(2)}€
+                  </span>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>

@@ -11,6 +11,7 @@ import {AdditionalOptions} from "./components/AdditionalOptions";
 import {DeliveryInfo} from "./components/DeliveryInfo";
 import logo from "./assets/logo.svg";
 import background from "./assets/background.png";
+import {SLIDER_CONFIGS, PRICES} from "./config/appConfig";
 
 function App() {
   const [selectedTypes, setSelectedTypes] = useState<ProjectType[]>([]);
@@ -42,10 +43,12 @@ function App() {
       ...prev,
       // Réinitialiser la durée en fonction du type
       duration: isSocialOnly
-        ? Math.min(prev.duration, 2)
-        : Math.min(prev.duration, 6),
+        ? Math.min(prev.duration, SLIDER_CONFIGS.DURATION.SOCIAL.max)
+        : Math.min(prev.duration, SLIDER_CONFIGS.DURATION.DEFAULT.max),
       // Gérer les extras pour le type script
-      extras: isScriptOnly ? 0 : Math.max(prev.extras, 1),
+      extras: isScriptOnly
+        ? Math.max(prev.extras, SLIDER_CONFIGS.EXTRAS.SCRIPT.min)
+        : Math.max(prev.extras, SLIDER_CONFIGS.EXTRAS.DEFAULT.min),
     }));
   }, [selectedTypes, isScriptOnly, isSocialOnly]);
 
@@ -54,36 +57,36 @@ function App() {
       label: "Durée de la vidéo",
       value: priceModifiers.duration,
       unit: "min",
-      min: 0.5,
-      max: isSocialOnly ? 2 : 6,
-      step: 0.5,
+      min: SLIDER_CONFIGS.DURATION[isSocialOnly ? "SOCIAL" : "DEFAULT"].min,
+      max: SLIDER_CONFIGS.DURATION[isSocialOnly ? "SOCIAL" : "DEFAULT"].max,
+      step: SLIDER_CONFIGS.DURATION[isSocialOnly ? "SOCIAL" : "DEFAULT"].step,
       onChange: (value: number) =>
         setPriceModifiers({...priceModifiers, duration: value}),
       price:
         Math.ceil((priceModifiers.duration * 60) / 30) *
-        (isSocialOnly ? 10 : 5),
+        (isSocialOnly ? PRICES.TIME_RATES.SOCIAL : PRICES.TIME_RATES.DEFAULT),
     },
     {
       label: "Nombre de doubleurs",
       value: priceModifiers.actors,
       unit: "",
-      min: 0,
-      max: 10,
-      step: 1,
+      min: SLIDER_CONFIGS.ACTORS.min,
+      max: SLIDER_CONFIGS.ACTORS.max,
+      step: SLIDER_CONFIGS.ACTORS.step,
       onChange: (value: number) =>
         setPriceModifiers({...priceModifiers, actors: value}),
-      price: priceModifiers.actors * 11,
+      price: priceModifiers.actors * PRICES.ACTOR,
     },
     {
       label: "Nombre de figurants",
       value: priceModifiers.extras,
       unit: "",
-      min: isScriptOnly ? 0 : 1,
-      max: 15,
-      step: 1,
+      min: SLIDER_CONFIGS.EXTRAS[isScriptOnly ? "SCRIPT" : "DEFAULT"].min,
+      max: SLIDER_CONFIGS.EXTRAS[isScriptOnly ? "SCRIPT" : "DEFAULT"].max,
+      step: SLIDER_CONFIGS.EXTRAS[isScriptOnly ? "SCRIPT" : "DEFAULT"].step,
       onChange: (value: number) =>
         setPriceModifiers({...priceModifiers, extras: value}),
-      price: priceModifiers.extras * 2,
+      price: priceModifiers.extras * PRICES.EXTRA,
     },
   ];
 

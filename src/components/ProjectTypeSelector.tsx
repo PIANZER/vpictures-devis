@@ -1,19 +1,13 @@
 import React from "react";
 import {ChevronDown, ChevronUp} from "lucide-react";
 import {motion, AnimatePresence} from "framer-motion";
-import {ProjectType, ProjectTypeInfo} from "../types";
+import {ProjectType} from "../types";
+import {PROJECT_TYPES} from "../config/appConfig";
 
 interface ProjectTypeSelectorProps {
   selectedTypes: ProjectType[];
   onTypeChange: (types: ProjectType[]) => void;
 }
-
-export const projectTypes: ProjectTypeInfo[] = [
-  {id: "server", label: "Présentation de Serveur", price: 15},
-  {id: "group", label: "Présentation de Groupe/Personnage", price: -10},
-  {id: "script", label: "Présentation de Script/Mapping", price: 10},
-  {id: "social", label: "Format Tiktok/Instagram", price: 0},
-];
 
 export const ProjectTypeSelector: React.FC<ProjectTypeSelectorProps> = ({
   selectedTypes,
@@ -38,7 +32,7 @@ export const ProjectTypeSelector: React.FC<ProjectTypeSelectorProps> = ({
         <span className="text-lg">
           {!selectedType
             ? "Sélectionner le type de projet"
-            : projectTypes.find((type) => type.id === selectedType)?.label ||
+            : PROJECT_TYPES.find((type) => type.id === selectedType)?.label ||
               "Type de projet"}
         </span>
         {isDropdownOpen ? (
@@ -83,7 +77,7 @@ export const ProjectTypeSelector: React.FC<ProjectTypeSelectorProps> = ({
                 </label>
                 <span className="font-bold text-lg text-gray-500">0€</span>
               </div>
-              {projectTypes.map((type) => (
+              {PROJECT_TYPES.map((type) => (
                 <div
                   key={type.id}
                   className={`

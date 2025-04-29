@@ -1,25 +1,23 @@
 import {ProjectType, PriceModifier} from "../types";
+import {
+  PROJECT_TYPES,
+  PRICES,
+  MINIMUM_PRICES,
+  DELIVERY_TIMES,
+} from "../config/appConfig";
 
 export const calculateDeliveryTime = (
   duration: number,
   isSocial: boolean
 ): number => {
-  if (isSocial) {
-    if (duration <= 0.5) return 2; // 30 sec
-    if (duration <= 1) return 2; // 1 min
-    if (duration <= 1.5) return 3; // 1min30
-    if (duration <= 2) return 4; // 2 min
-    return 4; // Default for longer social content
-  } else {
-    if (duration <= 1) return 10; // 1 min
-    if (duration <= 2) return 15; // 2 min
-    if (duration <= 3) return 20; // 3 min
-    if (duration <= 3.5) return 25; // 3min30
-    if (duration <= 4) return 30; // 4 min
-    if (duration <= 5) return 35; // 5 min
-    if (duration <= 6) return 40; // 6 min
-    return 40; // Default for longer content
-  }
+  const times = isSocial ? DELIVERY_TIMES.SOCIAL : DELIVERY_TIMES.DEFAULT;
+
+  // Check for exact time matches
+  const exactTime = times[duration.toString() as keyof typeof times];
+  if (exactTime) return exactTime;
+
+  // Return default value if no exact match
+  return times.DEFAULT;
 };
 
 export const calculateTotal = (
@@ -30,32 +28,24 @@ export const calculateTotal = (
 
   // Project type base prices
   selectedTypes.forEach((type) => {
-    switch (type) {
-      case "server":
-        total += 15;
-        break;
-      case "group":
-        total -= 10;
-        break;
-      case "script":
-        total += 10;
-        break;
-      case "social":
-        total += 0;
-        break;
+    const projectType = PROJECT_TYPES.find((pt) => pt.id === type);
+    if (projectType) {
+      total += projectType.price;
     }
   });
 
-  // Time price (2.5€ per 30 seconds)
+  // Time price
   const isTikTok = selectedTypes.includes("social");
-  const timeRate = isTikTok ? 10 : 5; // 10€ per 30 seconds for TikTok, 2.5€ otherwise
+  const timeRate = isTikTok
+    ? PRICES.TIME_RATES.SOCIAL
+    : PRICES.TIME_RATES.DEFAULT;
   total += Math.ceil((priceModifiers.duration * 60) / 30) * timeRate;
 
-  // Actors price (11€ per actor)
-  total += priceModifiers.actors * 11;
+  // Actors price
+  total += priceModifiers.actors * PRICES.ACTOR;
 
-  // Extras price (2€ per extra)
-  total += priceModifiers.extras * 2;
+  // Extras price
+  total += priceModifiers.extras * PRICES.EXTRA;
 
   // Additional services
   if (priceModifiers.shootingServer) total += 5;
@@ -70,14 +60,14 @@ export const getMinimumPriceWarning = (
   isSocialOnly: boolean,
   hasGroup: boolean
 ): string | null => {
-  if (isSocialOnly && total < 25) {
-    return "Le prix minimum pour un format TikTok/Instagram est de 25€";
+  if (isSocialOnly && total < MINIMUM_PRICES.SOCIAL) {
+    return `Le prix minimum pour un format TikTok/Instagram est de ${MINIMUM_PRICES.SOCIAL}€`;
   }
-  if (hasGroup && total < 30) {
-    return "Le prix minimum pour une présentation de personnage est de 30€";
+  if (hasGroup && total < MINIMUM_PRICES.GROUP) {
+    return `Le prix minimum pour une présentation de personnage est de ${MINIMUM_PRICES.GROUP}€`;
   }
-  if (!isSocialOnly && !hasGroup && total < 40) {
-    return "Le prix minimum pour ce type de contenu est de 40€";
+  if (!isSocialOnly && !hasGroup && total < MINIMUM_PRICES.DEFAULT) {
+    return `Le prix minimum pour ce type de contenu est de ${MINIMUM_PRICES.DEFAULT}€`;
   }
   return null;
 };

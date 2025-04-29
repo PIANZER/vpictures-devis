@@ -1,16 +1,11 @@
-import React from 'react';
-import { PriceModifier, AdditionalOption } from '../types';
+import React from "react";
+import {PriceModifier} from "../types";
+import {ADDITIONAL_OPTIONS} from "../config/appConfig";
 
 interface AdditionalOptionsProps {
   priceModifiers: PriceModifier;
   onChange: (modifiers: PriceModifier) => void;
 }
-
-const additionalOptions: AdditionalOption[] = [
-  { id: 'shootingServer', label: 'Serveur de tournage', price: 5 },
-  { id: 'guideline', label: 'Création de la ligne directrice', price: 5 },
-  { id: 'script', label: 'Création du script', price: 5 }
-];
 
 export const AdditionalOptions: React.FC<AdditionalOptionsProps> = ({
   priceModifiers,
@@ -18,7 +13,7 @@ export const AdditionalOptions: React.FC<AdditionalOptionsProps> = ({
 }) => {
   return (
     <div className="space-y-3">
-      {additionalOptions.map((option) => (
+      {ADDITIONAL_OPTIONS.map((option) => (
         <div
           key={option.id}
           className="flex items-center justify-between border-2 border-cyan-200 rounded p-3 bg-white"
@@ -27,7 +22,9 @@ export const AdditionalOptions: React.FC<AdditionalOptionsProps> = ({
             <input
               type="checkbox"
               checked={priceModifiers[option.id]}
-              onChange={(e) => onChange({...priceModifiers, [option.id]: e.target.checked})}
+              onChange={(e) =>
+                onChange({...priceModifiers, [option.id]: e.target.checked})
+              }
               className="w-5 h-5 rounded border-cyan-300 text-cyan-500"
             />
             <span className="text-lg">{option.label}</span>

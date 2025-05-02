@@ -47,3 +47,4 @@ npm run lint
 ## Licence
 
 Ce projet est sous licence MIT.
+by PIANZER

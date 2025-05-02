@@ -27,8 +27,8 @@ export const PROJECT_TYPES: ProjectTypeInfo[] = [
 // Centralisation de tous les prix dans une structure unique
 export const PRICES = {
   TIME_RATES: {
-    DEFAULT: 10, // Prix par segment de 30 secondes pour contenu standard
-    SOCIAL: 20, // Prix par segment de 30 secondes pour contenu social
+    DEFAULT: 15, // Prix par segment de 30 secondes pour contenu standard
+    SOCIAL: 15, // Prix par segment de 30 secondes pour contenu social
   },
   ACTOR: 15, // Prix par acteur
   EXTRA: 5, // Prix par figurant
@@ -37,7 +37,7 @@ export const PRICES = {
     SHOOTING_SERVER: 5, // Prix pour le serveur de tournage
     GUIDELINE: 5, // Prix pour la ligne directrice
     SCRIPT: 5, // Prix pour le script
-    WATERMARK_REMOVAL: 40, // Prix pour retrait du filigrane
+    WATERMARK_REMOVAL: 40, // Prix pour retrait du logo VPictures
     FAST_DELIVERY: 70, // Prix pour la livraison rapide
   },
   FAST_DELIVERY_FACTOR: 0.5, // Facteur de réduction du temps pour livraison rapide
@@ -95,7 +95,7 @@ export const ADDITIONAL_OPTIONS: AdditionalOption[] = [
   },
   {
     id: "watermark",
-    label: "Retrait du filigrane",
+    label: "Retrait du logo VPictures",
     price: PRICES.ADDITIONAL_SERVICES.WATERMARK_REMOVAL,
   },
   {

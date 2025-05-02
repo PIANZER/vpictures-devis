@@ -103,18 +103,18 @@ export const ProjectTypeSelector: React.FC<ProjectTypeSelectorProps> = ({
                   </label>
                   <span
                     className={`font-bold text-lg ${
-                      type.price > 0
+                      type.percentageModifier > 0
                         ? "text-green-500"
-                        : type.price < 0
+                        : type.percentageModifier < 0
                         ? "text-red-500"
                         : "text-gray-500"
                     }`}
                   >
-                    {type.price > 0
-                      ? `+${type.price}€`
-                      : type.price < 0
-                      ? `${type.price}€`
-                      : "0€"}
+                    {type.percentageModifier > 0
+                      ? `+${type.percentageModifier}%`
+                      : type.percentageModifier < 0
+                      ? `${type.percentageModifier}%`
+                      : "0%"}
                   </span>
                 </div>
               ))}

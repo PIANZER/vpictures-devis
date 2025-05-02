@@ -22,6 +22,8 @@ function App() {
     shootingServer: false,
     guideline: false,
     script: false,
+    watermark: false,
+    fastDelivery: false,
   });
 
   const isScriptOnly =
@@ -33,7 +35,8 @@ function App() {
   const total = calculateTotal(selectedTypes, priceModifiers);
   const deliveryTime = calculateDeliveryTime(
     priceModifiers.duration,
-    isSocialOnly
+    isSocialOnly,
+    priceModifiers.fastDelivery
   );
   const priceWarning = getMinimumPriceWarning(total, isSocialOnly, hasGroup);
 
@@ -86,7 +89,10 @@ function App() {
       step: SLIDER_CONFIGS.EXTRAS[isScriptOnly ? "SCRIPT" : "DEFAULT"].step,
       onChange: (value: number) =>
         setPriceModifiers({...priceModifiers, extras: value}),
-      price: priceModifiers.extras * PRICES.EXTRA,
+      price:
+        priceModifiers.extras < 3
+          ? 0
+          : (priceModifiers.extras - 3) * PRICES.EXTRA,
     },
   ];
 
@@ -148,6 +154,7 @@ function App() {
                 <DeliveryInfo
                   deliveryTime={deliveryTime}
                   priceWarning={priceWarning}
+                  isFastDelivery={priceModifiers.fastDelivery}
                 />
 
                 <div className="flex justify-between items-center pt-6 mt-8 border-t-2 border-cyan-200">

@@ -1,4 +1,4 @@
-export type ProjectType = 'server' | 'group' | 'script' | 'social';
+export type ProjectType = "server" | "group" | "script" | "social";
 
 export interface PriceModifier {
   actors: number;
@@ -7,12 +7,14 @@ export interface PriceModifier {
   shootingServer: boolean;
   guideline: boolean;
   script: boolean;
+  watermark: boolean;
+  fastDelivery: boolean;
 }
 
 export interface ProjectTypeInfo {
   id: ProjectType;
   label: string;
-  price: number;
+  percentageModifier: number;
 }
 
 export interface SliderConfig {
@@ -27,7 +29,10 @@ export interface SliderConfig {
 }
 
 export interface AdditionalOption {
-  id: keyof Pick<PriceModifier, 'shootingServer' | 'guideline' | 'script'>;
+  id: keyof Pick<
+    PriceModifier,
+    "shootingServer" | "guideline" | "script" | "watermark" | "fastDelivery"
+  >;
   label: string;
   price: number;
 }

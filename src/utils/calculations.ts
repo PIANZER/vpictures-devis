@@ -8,51 +8,71 @@ import {
 
 export const calculateDeliveryTime = (
   duration: number,
-  isSocial: boolean
+  isSocial: boolean,
+  fastDelivery: boolean = false
 ): number => {
   const times = isSocial ? DELIVERY_TIMES.SOCIAL : DELIVERY_TIMES.DEFAULT;
 
-  // Check for exact time matches
+  // Récupérer le temps standard
+  let standardTime: number;
   const exactTime = times[duration.toString() as keyof typeof times];
-  if (exactTime) return exactTime;
+  if (exactTime) {
+    standardTime = exactTime;
+  } else {
+    standardTime = times.DEFAULT;
+  }
 
-  // Return default value if no exact match
-  return times.DEFAULT;
+  // Appliquer la réduction si livraison rapide
+  if (fastDelivery) {
+    return Math.ceil(standardTime * PRICES.FAST_DELIVERY_FACTOR);
+  }
+
+  return standardTime;
 };
 
 export const calculateTotal = (
   selectedTypes: ProjectType[],
   priceModifiers: PriceModifier
 ): number => {
-  let total = 0;
+  // Calculer d'abord le prix de base sans les modificateurs de type
+  let baseTotal = 0;
 
-  // Project type base prices
-  selectedTypes.forEach((type) => {
-    const projectType = PROJECT_TYPES.find((pt) => pt.id === type);
-    if (projectType) {
-      total += projectType.price;
-    }
-  });
-
-  // Time price
+  // Prix du temps
   const isTikTok = selectedTypes.includes("social");
   const timeRate = isTikTok
     ? PRICES.TIME_RATES.SOCIAL
     : PRICES.TIME_RATES.DEFAULT;
-  total += Math.ceil((priceModifiers.duration * 60) / 30) * timeRate;
+  baseTotal += Math.ceil((priceModifiers.duration * 60) / 30) * timeRate;
 
-  // Actors price
-  total += priceModifiers.actors * PRICES.ACTOR;
+  // Prix des acteurs
+  baseTotal += priceModifiers.actors * PRICES.ACTOR;
 
-  // Extras price
-  total += priceModifiers.extras * PRICES.EXTRA;
+  // Prix des figurants (3 premiers gratuits)
+  const extrasCount = Math.max(0, priceModifiers.extras - PRICES.FREE_EXTRAS);
+  baseTotal += extrasCount * PRICES.EXTRA;
 
-  // Additional services
-  if (priceModifiers.shootingServer) total += 5;
-  if (priceModifiers.guideline) total += 5;
-  if (priceModifiers.script) total += 5;
+  // Services additionnels - utiliser les références aux prix centralisés
+  if (priceModifiers.shootingServer)
+    baseTotal += PRICES.ADDITIONAL_SERVICES.SHOOTING_SERVER;
+  if (priceModifiers.guideline)
+    baseTotal += PRICES.ADDITIONAL_SERVICES.GUIDELINE;
+  if (priceModifiers.script) baseTotal += PRICES.ADDITIONAL_SERVICES.SCRIPT;
+  if (priceModifiers.watermark)
+    baseTotal += PRICES.ADDITIONAL_SERVICES.WATERMARK_REMOVAL;
+  if (priceModifiers.fastDelivery)
+    baseTotal += PRICES.ADDITIONAL_SERVICES.FAST_DELIVERY;
 
-  return total;
+  // Appliquer le modificateur de pourcentage du type de projet
+  let finalTotal = baseTotal;
+  selectedTypes.forEach((type) => {
+    const projectType = PROJECT_TYPES.find((pt) => pt.id === type);
+    if (projectType) {
+      // Appliquer le modificateur de pourcentage
+      finalTotal *= 1 + projectType.percentageModifier / 100;
+    }
+  });
+
+  return finalTotal;
 };
 
 export const getMinimumPriceWarning = (

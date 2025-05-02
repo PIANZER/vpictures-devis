@@ -75,7 +75,6 @@ export const ProjectTypeSelector: React.FC<ProjectTypeSelectorProps> = ({
                   />
                   <span className="text-lg">Aucun type sélectionné</span>
                 </label>
-                <span className="font-bold text-lg text-gray-500">0€</span>
               </div>
               {PROJECT_TYPES.map((type) => (
                 <div

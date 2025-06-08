@@ -15,7 +15,7 @@ export const PROJECT_TYPES: ProjectTypeInfo[] = [
   {
     id: "script",
     label: "Présentation de Script/Mapping/Modèle",
-    percentageModifier: 0,
+    percentageModifier: 5,
   },
   {
     id: "social",
@@ -27,16 +27,16 @@ export const PROJECT_TYPES: ProjectTypeInfo[] = [
 // Centralisation de tous les prix dans une structure unique
 export const PRICES = {
   TIME_RATES: {
-    DEFAULT: 15, // Prix par segment de 30 secondes pour contenu standard
-    SOCIAL: 15, // Prix par segment de 30 secondes pour contenu social
+    DEFAULT: 20, // Prix par segment de 30 secondes pour contenu standard
+    SOCIAL: 20, // Prix par segment de 30 secondes pour contenu social
   },
   ACTOR: 15, // Prix par acteur
   EXTRA: 5, // Prix par figurant
-  FREE_EXTRAS: 3, // Nombre de figurants gratuits
+  FREE_EXTRAS: 2, // Nombre de figurants gratuits
   ADDITIONAL_SERVICES: {
     SHOOTING_SERVER: 5, // Prix pour le serveur de tournage
-    GUIDELINE: 5, // Prix pour la ligne directrice
-    SCRIPT: 5, // Prix pour le script
+    GUIDELINE: 10, // Prix pour la ligne directrice
+    SCRIPT: 10, // Prix pour le script
     WATERMARK_REMOVAL: 40, // Prix pour retrait du logo VPictures
     FAST_DELIVERY: 70, // Prix pour la livraison rapide
   },
@@ -107,7 +107,7 @@ export const ADDITIONAL_OPTIONS: AdditionalOption[] = [
 
 // Minimum price thresholds
 export const MINIMUM_PRICES = {
-  SOCIAL: 25,
+  SOCIAL: 30,
   GROUP: 30,
   DEFAULT: 40,
 };

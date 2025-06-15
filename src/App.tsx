@@ -6,10 +6,12 @@ import {
   getMinimumPriceWarning,
   calculateDeposit,
 } from "./utils/calculations";
+import {decodeDevisFromUrl, generateDevisUrl} from "./utils/urlCode";
 import {ProjectTypeSelector} from "./components/ProjectTypeSelector";
 import {PriceSlider} from "./components/PriceSlider";
 import {AdditionalOptions} from "./components/AdditionalOptions";
 import {DeliveryInfo} from "./components/DeliveryInfo";
+import {CopyDevisButton} from "./components/CopyDevisButton";
 import logo from "./assets/logo.svg";
 import background from "./assets/background.png";
 import {SLIDER_CONFIGS, PRICES} from "./config/appConfig";
@@ -27,6 +29,15 @@ function App() {
     fastDelivery: false,
     verticalFormat: false,
   });
+
+  // Charger les données depuis l'URL au démarrage
+  useEffect(() => {
+    const devisFromUrl = decodeDevisFromUrl();
+    if (devisFromUrl) {
+      setSelectedTypes(devisFromUrl.selectedTypes);
+      setPriceModifiers(devisFromUrl.priceModifiers);
+    }
+  }, []);
 
   const isScriptOnly =
     selectedTypes.length === 1 && selectedTypes[0] === "script";
@@ -56,6 +67,17 @@ function App() {
         : Math.max(prev.extras, SLIDER_CONFIGS.EXTRAS.DEFAULT.min),
     }));
   }, [selectedTypes, isScriptOnly, isSocialOnly]);
+
+  // Mettre à jour l'URL automatiquement à chaque changement
+  useEffect(() => {
+    if (selectedTypes.length > 0) {
+      const devisData = {selectedTypes, priceModifiers};
+      const newUrl = generateDevisUrl(devisData);
+
+      // Mettre à jour l'URL sans recharger la page
+      window.history.replaceState({}, "", newUrl);
+    }
+  }, [selectedTypes, priceModifiers]);
 
   const sliders = [
     {
@@ -166,12 +188,16 @@ function App() {
                       {deposit.toFixed(2)}€
                     </span>
                   </div>
-                )}
+                )}{" "}
                 <div className="flex justify-between items-center pt-6 mt-8 border-t-2 border-cyan-200">
                   <span className="text-2xl font-bold">Total TTC :</span>
                   <span className="text-4xl font-bold text-cyan-600">
                     {total.toFixed(2)}€
                   </span>
+                </div>{" "}
+                {/* Bouton de copie du devis */}
+                <div className="pt-6 mt-6 border-t border-gray-200">
+                  <CopyDevisButton selectedTypes={selectedTypes} />
                 </div>
               </>
             )}

@@ -39,6 +39,7 @@ export const PRICES = {
     SCRIPT: 10, // Prix pour le script
     WATERMARK_REMOVAL: 40, // Prix pour retrait du logo VPictures
     FAST_DELIVERY: 70, // Prix pour la livraison rapide
+    VERTICAL_FORMAT: 15, // Prix pour le format vertical
   },
   FAST_DELIVERY_FACTOR: 0.5, // Facteur de réduction du temps pour livraison rapide
 };
@@ -102,6 +103,12 @@ export const ADDITIONAL_OPTIONS: AdditionalOption[] = [
     id: "fastDelivery",
     label: "Livraison rapide",
     price: PRICES.ADDITIONAL_SERVICES.FAST_DELIVERY,
+  },
+  {
+    id: "verticalFormat",
+    label: "Format vertical",
+    price: PRICES.ADDITIONAL_SERVICES.VERTICAL_FORMAT,
+    excludeForTiktok: true,
   },
 ];
 

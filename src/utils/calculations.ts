@@ -50,7 +50,6 @@ export const calculateTotal = (
   // Prix des figurants (3 premiers gratuits)
   const extrasCount = Math.max(0, priceModifiers.extras - PRICES.FREE_EXTRAS);
   baseTotal += extrasCount * PRICES.EXTRA;
-
   // Services additionnels - utiliser les références aux prix centralisés
   if (priceModifiers.shootingServer)
     baseTotal += PRICES.ADDITIONAL_SERVICES.SHOOTING_SERVER;
@@ -61,6 +60,8 @@ export const calculateTotal = (
     baseTotal += PRICES.ADDITIONAL_SERVICES.WATERMARK_REMOVAL;
   if (priceModifiers.fastDelivery)
     baseTotal += PRICES.ADDITIONAL_SERVICES.FAST_DELIVERY;
+  if (priceModifiers.verticalFormat)
+    baseTotal += PRICES.ADDITIONAL_SERVICES.VERTICAL_FORMAT;
 
   // Appliquer le modificateur de pourcentage du type de projet
   let finalTotal = baseTotal;
@@ -90,4 +91,14 @@ export const getMinimumPriceWarning = (
     return `Le prix minimum pour ce type de contenu est de ${MINIMUM_PRICES.DEFAULT}€`;
   }
   return null;
+};
+
+export const calculateDeposit = (
+  total: number,
+  isTiktokOnly: boolean
+): number => {
+  if (isTiktokOnly) {
+    return 0; // Pas d'accompte pour TikTok
+  }
+  return total * 0.35; // 35% d'accompte
 };

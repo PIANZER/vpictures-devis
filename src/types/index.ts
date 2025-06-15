@@ -9,6 +9,7 @@ export interface PriceModifier {
   script: boolean;
   watermark: boolean;
   fastDelivery: boolean;
+  verticalFormat: boolean;
 }
 
 export interface ProjectTypeInfo {
@@ -31,8 +32,14 @@ export interface SliderConfig {
 export interface AdditionalOption {
   id: keyof Pick<
     PriceModifier,
-    "shootingServer" | "guideline" | "script" | "watermark" | "fastDelivery"
+    | "shootingServer"
+    | "guideline"
+    | "script"
+    | "watermark"
+    | "fastDelivery"
+    | "verticalFormat"
   >;
   label: string;
   price: number;
+  excludeForTiktok?: boolean;
 }

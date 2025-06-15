@@ -1,19 +1,29 @@
 import React from "react";
-import {PriceModifier} from "../types";
+import {PriceModifier, ProjectType} from "../types";
 import {ADDITIONAL_OPTIONS} from "../config/appConfig";
 
 interface AdditionalOptionsProps {
   priceModifiers: PriceModifier;
   onChange: (modifiers: PriceModifier) => void;
+  selectedTypes: ProjectType[];
 }
 
 export const AdditionalOptions: React.FC<AdditionalOptionsProps> = ({
   priceModifiers,
   onChange,
+  selectedTypes,
 }) => {
+  const isTiktokOnly =
+    selectedTypes.length === 1 && selectedTypes[0] === "social";
+
+  // Filtrer les options pour exclure le format vertical pour TikTok
+  const availableOptions = ADDITIONAL_OPTIONS.filter(
+    (option) => !(option.excludeForTiktok && isTiktokOnly)
+  );
+
   return (
     <div className="space-y-3">
-      {ADDITIONAL_OPTIONS.map((option) => (
+      {availableOptions.map((option) => (
         <div
           key={option.id}
           className="flex items-center justify-between border-2 border-cyan-200 rounded p-3 bg-white"

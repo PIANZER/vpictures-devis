@@ -4,6 +4,7 @@ import {
   calculateDeliveryTime,
   calculateTotal,
   getMinimumPriceWarning,
+  calculateDeposit,
 } from "./utils/calculations";
 import {ProjectTypeSelector} from "./components/ProjectTypeSelector";
 import {PriceSlider} from "./components/PriceSlider";
@@ -24,6 +25,7 @@ function App() {
     script: false,
     watermark: false,
     fastDelivery: false,
+    verticalFormat: false,
   });
 
   const isScriptOnly =
@@ -31,8 +33,8 @@ function App() {
   const isSocialOnly =
     selectedTypes.length === 1 && selectedTypes[0] === "social";
   const hasGroup = selectedTypes.includes("group");
-
   const total = calculateTotal(selectedTypes, priceModifiers);
+  const deposit = calculateDeposit(total, isSocialOnly);
   const deliveryTime = calculateDeliveryTime(
     priceModifiers.duration,
     isSocialOnly,
@@ -90,9 +92,9 @@ function App() {
       onChange: (value: number) =>
         setPriceModifiers({...priceModifiers, extras: value}),
       price:
-        priceModifiers.extras < 3
+        priceModifiers.extras < PRICES.FREE_EXTRAS
           ? 0
-          : (priceModifiers.extras - 3) * PRICES.EXTRA,
+          : (priceModifiers.extras - PRICES.FREE_EXTRAS) * PRICES.EXTRA,
     },
   ];
 
@@ -144,19 +146,27 @@ function App() {
                   {sliders.map((slider) => (
                     <PriceSlider key={slider.label} {...slider} />
                   ))}
-                </div>
-
+                </div>{" "}
                 <AdditionalOptions
                   priceModifiers={priceModifiers}
                   onChange={setPriceModifiers}
-                />
-
+                  selectedTypes={selectedTypes}
+                />{" "}
                 <DeliveryInfo
                   deliveryTime={deliveryTime}
                   priceWarning={priceWarning}
                   isFastDelivery={priceModifiers.fastDelivery}
                 />
-
+                {!isSocialOnly && deposit > 0 && (
+                  <div className="flex justify-between items-center pt-4 border-t border-cyan-100">
+                    <span className="text-xl font-semibold text-gray-700">
+                      Accompte (35%) :
+                    </span>
+                    <span className="text-2xl font-bold text-orange-500">
+                      {deposit.toFixed(2)}€
+                    </span>
+                  </div>
+                )}
                 <div className="flex justify-between items-center pt-6 mt-8 border-t-2 border-cyan-200">
                   <span className="text-2xl font-bold">Total TTC :</span>
                   <span className="text-4xl font-bold text-cyan-600">

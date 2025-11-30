@@ -39,6 +39,9 @@ export const AdditionalOptions: React.FC<AdditionalOptionsProps> = ({
                 onChange({...priceModifiers, [option.id]: e.target.checked})
               }
               className="w-5 h-5 rounded border-cyan-300 text-cyan-500"
+              style={{
+                accentColor: "#06b6d4",
+              }}
             />
             <div className="flex items-center">
               <span className="text-lg dark:text-white">{option.label}</span>

@@ -47,7 +47,12 @@ export const PriceSlider: React.FC<SliderConfig> = ({
         step={step}
         value={value}
         onChange={(e) => onChange(parseFloat(e.target.value))}
-        className="w-full h-2 bg-cyan-100 dark:bg-cyan-900 rounded-lg appearance-none cursor-pointer accent-cyan-500"
+        className="w-full h-2 bg-cyan-100 dark:bg-cyan-900 rounded-lg cursor-pointer"
+        style={{
+          WebkitAppearance: "none",
+          MozAppearance: "none",
+          appearance: "none",
+        }}
       />
     </div>
   );

@@ -2,6 +2,7 @@ import {useState, useEffect} from "react";
 import {ProjectType, PriceModifier} from "./types";
 import {
   calculateDeliveryTime,
+  calculateDeposit,
   calculateTotal,
   getMinimumPriceWarning,
 } from "./utils/calculations";
@@ -50,6 +51,7 @@ function App() {
     selectedTypes.length === 1 && selectedTypes[0] === "social";
   const hasGroup = selectedTypes.includes("group");
   const total = calculateTotal(selectedTypes, priceModifiers);
+  const deposit = calculateDeposit(total, isSocialOnly);
 
   // Calculer le prix sans réduction pour l'affichage
   const totalWithoutDiscount =
@@ -215,6 +217,17 @@ function App() {
                   priceWarning={priceWarning}
                   isFastDelivery={priceModifiers.fastDelivery}
                 />
+                /* Accompte si tik tok */
+                {!isSocialOnly && (
+                  <div className="flex justify-between items-center pt-4 border-t border-cyan-100 dark:border-cyan-800">
+                    <span className="text-xl font-semibold text-gray-700 dark:text-gray-300">
+                      Accompte (35%) :
+                    </span>
+                    <span className="text-2xl font-bold text-orange-500 dark:text-orange-400">
+                      {deposit.min.toFixed(2)}€ - {deposit.max.toFixed(2)}€
+                    </span>
+                  </div>
+                )}{" "}
                 {totalWithoutDiscount && (
                   <div className="flex justify-between items-center pt-4 border-t border-cyan-100 dark:border-cyan-800">
                     <span className="text-xl font-semibold text-gray-700 dark:text-gray-300">

@@ -124,3 +124,13 @@ export const getMinimumPriceWarning = (
   }
   return null;
 };
+
+export const calculateDeposit = (
+  total: {min: number; max: number},
+  isTiktokOnly: boolean
+): {min: number; max: number} => {
+  if (isTiktokOnly) {
+    return {min: 0, max: 0}; // Pas d'accompte pour TikTok
+  }
+  return {min: total.min * 0.35, max: total.max * 0.35}; // 35% d'accompte
+};

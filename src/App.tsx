@@ -2,6 +2,7 @@ import {useState, useEffect} from "react";
 import {ProjectType, PriceModifier} from "./types";
 import {
   calculateDeliveryTime,
+  calculateDeposit,
   calculateTotal,
   getMinimumPriceWarning,
 } from "./utils/calculations";
@@ -47,6 +48,18 @@ function App() {
     selectedTypes.length === 1 && selectedTypes[0] === "script";
   const isSocialOnly =
     selectedTypes.length === 1 && selectedTypes[0] === "social";
+
+  // Désactiver automatiquement les sous-titres si on change de type de projet et que ce n'est plus TikTok uniquement
+  useEffect(() => {
+    if (!isSocialOnly) {
+      setPriceModifiers((prev) => {
+        if (prev.subtitles) {
+          return {...prev, subtitles: false};
+        }
+        return prev;
+      });
+    }
+  }, [isSocialOnly]);
 
   // Calculer les totaux
   const total = calculateTotal(selectedTypes, priceModifiers);

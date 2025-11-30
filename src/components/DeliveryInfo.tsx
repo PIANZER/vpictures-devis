@@ -12,15 +12,15 @@ export const DeliveryInfo: React.FC<DeliveryInfoProps> = ({
   isFastDelivery,
 }) => {
   return (
-    <div className="space-y-2">
-      <div className="bg-cyan-50 dark:bg-cyan-900 p-4 rounded-lg border-2 border-cyan-200 dark:border-cyan-700">
-        <h3 className="text-lg font-semibold text-cyan-800 dark:text-cyan-300 mb-2">
+    <div className="space-y-3">
+      <div className="rounded-lg border bg-card text-card-foreground shadow-sm p-5">
+        <h3 className="font-semibold leading-none tracking-tight mb-2">
           Délai de livraison estimé :
         </h3>
-        <div className="text-cyan-700 dark:text-cyan-300">
-          <strong>{deliveryTime} jours</strong>
+        <div className="text-sm text-muted-foreground">
+          <strong className="text-primary">{deliveryTime} jours</strong>
           {isFastDelivery && (
-            <span className="ml-2 text-green-600 dark:text-green-400 font-medium">
+            <span className="ml-2 text-emerald-600 dark:text-emerald-400">
               (Délai réduit grâce à la livraison rapide)
             </span>
           )}
@@ -28,8 +28,8 @@ export const DeliveryInfo: React.FC<DeliveryInfoProps> = ({
       </div>
 
       {priceWarning && (
-        <div className="bg-red-50 dark:bg-red-900 p-4 rounded-lg border-2 border-red-200 dark:border-red-700">
-          <div className="text-red-700 dark:text-red-300 font-medium">
+        <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-4">
+          <div className="text-sm font-medium text-destructive">
             ⚠️ {priceWarning}
           </div>
         </div>

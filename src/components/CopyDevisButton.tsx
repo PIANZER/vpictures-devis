@@ -45,28 +45,22 @@ export function CopyDevisButton({selectedTypes}: CopyDevisButtonProps) {
   }
 
   return (
-    <div className="flex flex-col items-center space-y-2">
+    <div className="flex flex-col items-center space-y-3">
       <button
         onClick={handleCopy}
         disabled={isLoading}
         className={`
-          px-6 py-3 rounded-lg font-semibold text-white transition-all duration-200
+          inline-flex w-full items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2
           ${
             isCopied
-              ? "bg-green-500 hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700"
-              : "bg-cyan-500 hover:bg-cyan-600 dark:bg-cyan-600 dark:hover:bg-cyan-700"
+              ? "bg-emerald-600 text-primary-foreground hover:bg-emerald-600/90"
+              : "bg-primary text-primary-foreground hover:bg-primary/90"
           }
-          ${
-            isLoading
-              ? "opacity-50 cursor-not-allowed"
-              : "hover:shadow-lg transform hover:scale-105"
-          }
-          disabled:opacity-50 disabled:cursor-not-allowed
         `}
       >
         {isLoading ? (
           <div className="flex items-center space-x-2">
-            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
             <span>Copie...</span>
           </div>
         ) : isCopied ? (
@@ -91,7 +85,7 @@ export function CopyDevisButton({selectedTypes}: CopyDevisButtonProps) {
         )}
       </button>
 
-      <p className="text-sm text-gray-500 dark:text-gray-400 text-center max-w-md">
+      <p className="text-sm text-muted-foreground text-center max-w-md">
         Partagez ce lien sur votre ticket Discord pour que les admins puissent
         voir votre devis et vous aider à le finaliser.
       </p>

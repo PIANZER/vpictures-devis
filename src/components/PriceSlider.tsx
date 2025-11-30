@@ -1,5 +1,6 @@
 import React from "react";
 import {SliderConfig} from "../types";
+import {Slider} from "./ui/slider";
 
 export const PriceSlider: React.FC<SliderConfig> = ({
   label,
@@ -18,36 +19,31 @@ export const PriceSlider: React.FC<SliderConfig> = ({
     "max" in price;
 
   return (
-    <div className="space-y-2">
-      <div className="flex justify-between items-center">
-        <label className="text-lg font-medium dark:text-white">{label}</label>
-        <div className="flex items-center gap-4">
-          <div className="px-4 py-1 bg-cyan-50 dark:bg-cyan-900 rounded border border-cyan-200 dark:border-cyan-700">
-            <span className="text-lg font-semibold text-cyan-700 dark:text-cyan-300">
-              {value} {unit}
-            </span>
+    <div className="space-y-4">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2">
+        <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+          {label}
+        </label>
+        <div className="flex items-center gap-2">
+          <div className="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-primary text-primary-foreground shadow hover:bg-primary/80">
+            {value} {unit}
           </div>
-          <div className="px-4 py-1 bg-green-50 dark:bg-green-900 rounded border border-green-200 dark:border-green-700">
-            <span className="text-lg font-semibold text-green-700 dark:text-green-300">
-              {isPriceRange && typeof price === "object" && price !== null
-                ? `${(price as {min: number; max: number}).min.toFixed(
-                    2
-                  )}€ - ${(price as {min: number; max: number}).max.toFixed(
-                    2
-                  )}€`
-                : `+${typeof price === "number" ? price.toFixed(2) : "0.00"}€`}
-            </span>
+          <div className="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80">
+            {isPriceRange && typeof price === "object" && price !== null
+              ? `${(price as {min: number; max: number}).min.toFixed(2)}€ - ${(
+                  price as {min: number; max: number}
+                ).max.toFixed(2)}€`
+              : `+${typeof price === "number" ? price.toFixed(2) : "0.00"}€`}
           </div>
         </div>
       </div>
-      <input
-        type="range"
+      <Slider
         min={min}
         max={max}
         step={step}
-        value={value}
-        onChange={(e) => onChange(parseFloat(e.target.value))}
-        className="w-full h-2 bg-cyan-100 dark:bg-cyan-900 rounded-lg appearance-none cursor-pointer accent-cyan-500"
+        value={[value]}
+        onValueChange={(values) => onChange(values[0])}
+        className="w-full"
       />
     </div>
   );

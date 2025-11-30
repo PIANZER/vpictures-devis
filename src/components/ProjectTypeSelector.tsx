@@ -14,33 +14,46 @@ export const ProjectTypeSelector: React.FC<ProjectTypeSelectorProps> = ({
   onTypeChange,
 }) => {
   const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
+  const dropdownRef = React.useRef<HTMLDivElement>(null);
 
   // Get the currently selected type (or null if none)
   const selectedType = selectedTypes.length > 0 ? selectedTypes[0] : null;
 
+  // Close dropdown when clicking outside
+  React.useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   return (
-    <div className="relative">
-      <h2 className="text-xl font-semibold mb-4 dark:text-white">
-        Type de projet
-      </h2>
+    <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-        className={`w-full flex items-center justify-between p-4 rounded-lg border-2 ${
-          selectedType
-            ? "border-cyan-200 dark:border-cyan-700 bg-white dark:bg-gray-800"
-            : "border-orange-300 dark:border-orange-600 bg-orange-50 dark:bg-orange-900"
-        } hover:border-cyan-400 dark:hover:border-cyan-500 transition-colors duration-200`}
+        className={`flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${
+          !selectedType
+            ? "border-destructive text-destructive"
+            : "hover:bg-accent hover:text-accent-foreground"
+        }`}
       >
-        <span className="text-lg dark:text-white">
+        <span className="font-medium">
           {!selectedType
             ? "Sélectionner le type de projet"
             : PROJECT_TYPES.find((type) => type.id === selectedType)?.label ||
               "Type de projet"}
         </span>
         {isDropdownOpen ? (
-          <ChevronUp className="text-cyan-500 dark:text-cyan-400" />
+          <ChevronUp className="h-4 w-4 opacity-50" />
         ) : (
-          <ChevronDown className="text-cyan-500 dark:text-cyan-400" />
+          <ChevronDown className="h-4 w-4 opacity-50" />
         )}
       </button>
 
@@ -51,21 +64,20 @@ export const ProjectTypeSelector: React.FC<ProjectTypeSelectorProps> = ({
             animate={{opacity: 1, y: 0}}
             exit={{opacity: 0, y: -10}}
             transition={{duration: 0.2}}
-            className="absolute z-10 w-full mt-2 bg-white dark:bg-gray-800 rounded-lg border-2 border-cyan-200 dark:border-cyan-700 shadow-lg overflow-hidden"
+            className="absolute z-50 w-full mt-1 rounded-md border bg-popover text-popover-foreground shadow-md overflow-hidden"
           >
-            <div className="divide-y divide-cyan-100 dark:divide-cyan-800">
+            <div className="p-1">
               <div
                 key="none"
-                className={`
-                  flex items-center justify-between p-4 hover:bg-cyan-50 dark:hover:bg-cyan-900 transition-colors duration-200
-                  ${selectedType === null ? "bg-cyan-50 dark:bg-cyan-900" : ""}
-                `}
+                className={`relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground ${
+                  selectedType === null ? "bg-accent" : ""
+                }`}
                 onClick={() => {
                   onTypeChange([]);
                   setIsDropdownOpen(false);
                 }}
               >
-                <label className="flex items-center gap-3 cursor-pointer w-full">
+                <label className="flex items-center gap-2 cursor-pointer w-full">
                   <input
                     type="radio"
                     checked={selectedType === null}
@@ -73,30 +85,23 @@ export const ProjectTypeSelector: React.FC<ProjectTypeSelectorProps> = ({
                       onTypeChange([]);
                       setIsDropdownOpen(false);
                     }}
-                    className="w-5 h-5 rounded-full border-cyan-300 text-cyan-500"
+                    className="h-4 w-4 rounded-full border-input accent-primary"
                   />
-                  <span className="text-lg dark:text-white">
-                    Aucun type sélectionné
-                  </span>
+                  <span className="text-sm">Aucun type sélectionné</span>
                 </label>
               </div>
               {PROJECT_TYPES.map((type) => (
                 <div
                   key={type.id}
-                  className={`
-                    flex items-center justify-between p-4 hover:bg-cyan-50 dark:hover:bg-cyan-900 transition-colors duration-200
-                    ${
-                      selectedType === type.id
-                        ? "bg-cyan-50 dark:bg-cyan-900"
-                        : ""
-                    }
-                  `}
+                  className={`relative flex cursor-pointer select-none items-center justify-between rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground ${
+                    selectedType === type.id ? "bg-accent" : ""
+                  }`}
                   onClick={() => {
                     onTypeChange([type.id]);
                     setIsDropdownOpen(false);
                   }}
                 >
-                  <label className="flex items-center gap-3 cursor-pointer w-full">
+                  <label className="flex items-center gap-2 cursor-pointer flex-1">
                     <input
                       type="radio"
                       checked={selectedType === type.id}
@@ -104,19 +109,17 @@ export const ProjectTypeSelector: React.FC<ProjectTypeSelectorProps> = ({
                         onTypeChange([type.id]);
                         setIsDropdownOpen(false);
                       }}
-                      className="w-5 h-5 rounded-full border-cyan-300 text-cyan-500"
+                      className="h-4 w-4 rounded-full border-input accent-primary"
                     />
-                    <span className="text-lg dark:text-white">
-                      {type.label}
-                    </span>
+                    <span className="text-sm">{type.label}</span>
                   </label>
                   <span
-                    className={`font-bold text-lg ${
+                    className={`text-xs font-semibold ${
                       type.percentageModifier > 0
-                        ? "text-green-500 dark:text-green-400"
+                        ? "text-emerald-600 dark:text-emerald-400"
                         : type.percentageModifier < 0
-                        ? "text-red-500 dark:text-red-400"
-                        : "text-gray-500 dark:text-gray-400"
+                        ? "text-destructive"
+                        : "text-muted-foreground"
                     }`}
                   >
                     {type.percentageModifier > 0

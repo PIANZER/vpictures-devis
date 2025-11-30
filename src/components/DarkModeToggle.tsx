@@ -13,13 +13,13 @@ export const DarkModeToggle: React.FC<DarkModeToggleProps> = ({
   return (
     <button
       onClick={onToggle}
-      className="p-2 rounded-lg border-2 border-cyan-200 dark:border-cyan-700 bg-white dark:bg-gray-800 hover:bg-cyan-50 dark:hover:bg-gray-700 transition-colors"
+      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 w-10"
       aria-label="Toggle dark mode"
     >
       {isDark ? (
-        <Sun className="w-6 h-6 text-yellow-500" />
+        <Sun className="h-[1.2rem] w-[1.2rem]" />
       ) : (
-        <Moon className="w-6 h-6 text-cyan-600" />
+        <Moon className="h-[1.2rem] w-[1.2rem]" />
       )}
     </button>
   );

@@ -1,5 +1,6 @@
 import React from "react";
 import {SliderConfig} from "../types";
+import "./PriceSlider.css";
 
 export const PriceSlider: React.FC<SliderConfig> = ({
   label,

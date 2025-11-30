@@ -84,8 +84,7 @@ export const ADDITIONAL_OPTIONS: AdditionalOption[] = [
     id: "shootingServer",
     label: "Serveur de tournage",
     price: PRICES.ADDITIONAL_SERVICES.SHOOTING_SERVER,
-    description:
-      "Mise à disposition d'un serveur privé pour réaliser votre tournage dans les meilleures conditions.",
+    description: "Mise en place de nos outils sur votre propre serveur.",
   },
   {
     id: "guideline",

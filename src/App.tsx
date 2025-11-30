@@ -217,7 +217,6 @@ function App() {
                   priceWarning={priceWarning}
                   isFastDelivery={priceModifiers.fastDelivery}
                 />
-                /* Accompte si tik tok */
                 {!isSocialOnly && (
                   <div className="flex justify-between items-center pt-4 border-t border-cyan-100 dark:border-cyan-800">
                     <span className="text-xl font-semibold text-gray-700 dark:text-gray-300">
@@ -242,9 +241,9 @@ function App() {
                 <div className="flex justify-between items-center pt-6 mt-8 border-t-2 border-cyan-200 dark:border-cyan-700">
                   <span className="text-2xl font-bold dark:text-white">
                     Total TTC
-                    {priceModifiers.discount && priceModifiers.discount > 0 && (
-                      <span className="text-green-500 dark:text-green-400 ml-2">
-                        (-{priceModifiers.discount}%)
+                    {(priceModifiers.discount ?? 0) > 0 && (
+                      <span className="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80">
+                        -{priceModifiers.discount}%
                       </span>
                     )}
                     :

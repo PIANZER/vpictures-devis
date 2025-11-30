@@ -6,6 +6,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
+import {Tooltip} from "@/components/Tooltip";
 
 interface DiscountSelectorProps {
   discount: number;
@@ -18,8 +19,9 @@ export const DiscountSelector: React.FC<DiscountSelectorProps> = ({
 }) => {
   return (
     <div className="space-y-3">
-      <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+      <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 flex items-center gap-1">
         Réduction applicable
+        <Tooltip text="Uniquement accordées si V-Pictures vous a accordé une réduction au préalable." />
       </label>
       <Select
         value={discount.toString()}

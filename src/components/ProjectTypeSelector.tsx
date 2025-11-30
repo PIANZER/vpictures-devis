@@ -38,7 +38,7 @@ export const ProjectTypeSelector: React.FC<ProjectTypeSelectorProps> = ({
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-        className={`flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${
+        className={`flex h-10 w-full items-center justify-between rounded-md border border-input bg-background dark:bg-gray-900 px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${
           !selectedType
             ? "border-destructive text-destructive"
             : "hover:bg-accent hover:text-accent-foreground"
@@ -64,7 +64,7 @@ export const ProjectTypeSelector: React.FC<ProjectTypeSelectorProps> = ({
             animate={{opacity: 1, y: 0}}
             exit={{opacity: 0, y: -10}}
             transition={{duration: 0.2}}
-            className="absolute z-50 w-full mt-1 rounded-md border bg-popover text-popover-foreground shadow-md overflow-hidden"
+            className="absolute z-50 w-full mt-1 rounded-md border bg-background dark:bg-gray-800 text-popover-foreground shadow-md overflow-hidden"
           >
             <div className="p-1">
               <div

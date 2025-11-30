@@ -1,4 +1,4 @@
-import {useState, useEffect} from "react";
+import {useState, useEffect, useRef} from "react";
 import {ProjectType, PriceModifier} from "./types";
 import {
   calculateDeliveryTime,
@@ -34,6 +34,7 @@ function App() {
     subtitles: false,
     discount: 0,
   });
+  const isInitialMount = useRef(true);
 
   // Charger les données depuis l'URL au démarrage
   useEffect(() => {
@@ -42,6 +43,10 @@ function App() {
       setSelectedTypes(devisFromUrl.selectedTypes);
       setPriceModifiers(devisFromUrl.priceModifiers);
     }
+    // Marquer que le montage initial est terminé après le chargement
+    setTimeout(() => {
+      isInitialMount.current = false;
+    }, 0);
   }, []);
 
   const isScriptOnly =
@@ -51,6 +56,11 @@ function App() {
 
   // Désactiver automatiquement les sous-titres si on change de type de projet et que ce n'est plus TikTok uniquement
   useEffect(() => {
+    // Ne pas exécuter pendant le montage initial (pour ne pas écraser les données de l'URL)
+    if (isInitialMount.current) {
+      return;
+    }
+
     if (!isSocialOnly) {
       setPriceModifiers((prev) => {
         if (prev.subtitles) {
@@ -144,7 +154,7 @@ function App() {
   ];
 
   return (
-    <div className="min-h-screen bg-background transition-colors duration-200">
+    <div className="min-h-screen bg-background transition-colors duration-200 dark:bg-gray-900">
       {/* Header */}
       <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex h-16 items-center justify-between">
@@ -280,7 +290,7 @@ function App() {
               </div>
 
               {/* Copy Button Card */}
-              <div className="rounded-lg border bg-muted p-6">
+              <div className="rounded-lg border bg-muted dark:bg-gray-800 p-6">
                 <CopyDevisButton selectedTypes={selectedTypes} />
               </div>
             </div>

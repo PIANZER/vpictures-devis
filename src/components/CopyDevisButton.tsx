@@ -53,7 +53,7 @@ export function CopyDevisButton({selectedTypes}: CopyDevisButtonProps) {
           inline-flex w-full items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2
           ${
             isCopied
-              ? "bg-emerald-600 text-primary-foreground hover:bg-emerald-600/90"
+              ? "bg-cyan-500 text-white hover:bg-cyan-600/90"
               : "bg-primary text-primary-foreground hover:bg-primary/90"
           }
         `}

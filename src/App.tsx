@@ -50,6 +50,7 @@ function App() {
 
   // Calculer les totaux
   const total = calculateTotal(selectedTypes, priceModifiers);
+  const deposit = calculateDeposit(total, isSocialOnly);
   const deliveryTime = calculateDeliveryTime(
     priceModifiers.duration,
     isSocialOnly,
@@ -223,6 +224,19 @@ function App() {
 
               {/* Price Summary Card */}
               <div className="rounded-lg border bg-card text-card-foreground shadow-lg p-6 space-y-4">
+                {/* Deposit Info */}
+                {deposit && (
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 pb-4 border-b">
+                    <span className="text-sm font-medium text-muted-foreground">
+                      Acompte à la commande (35%)
+                    </span>
+                    <span className="text-lg font-bold text-muted-foreground">
+                      {deposit.min.toFixed(2)}€ - {deposit.max.toFixed(2)}€
+                    </span>
+                  </div>
+                )}
+                {/* Total Price Info */}
+
                 {totalWithoutDiscount && (
                   <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 pb-4 border-b">
                     <span className="text-sm font-medium text-muted-foreground">

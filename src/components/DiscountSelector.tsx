@@ -1,4 +1,12 @@
 import React from "react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
+import {Tooltip} from "@/components/Tooltip";
 
 interface DiscountSelectorProps {
   discount: number;
@@ -10,21 +18,26 @@ export const DiscountSelector: React.FC<DiscountSelectorProps> = ({
   onChange,
 }) => {
   return (
-    <div className="space-y-2">
-      <label className="text-lg font-medium dark:text-white">
+    <div className="space-y-3">
+      <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 flex items-center gap-1">
         Réduction applicable
+        <Tooltip text="Uniquement accordées si V-Pictures vous a accordé une réduction au préalable." />
       </label>
-      <select
-        value={discount}
-        onChange={(e) => onChange(parseFloat(e.target.value))}
-        className="w-full p-3 border-2 border-cyan-200 dark:border-cyan-700 dark:bg-gray-800 dark:text-white rounded-lg text-lg focus:outline-none focus:border-cyan-400"
+      <Select
+        value={discount.toString()}
+        onValueChange={(value) => onChange(parseFloat(value))}
       >
-        <option value={0}>Aucune réduction</option>
-        <option value={10}>-10% de réduction</option>
-        <option value={20}>-20% de réduction</option>
-      </select>
+        <SelectTrigger>
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="0">Aucune réduction</SelectItem>
+          <SelectItem value="10">-10% de réduction</SelectItem>
+          <SelectItem value="20">-20% de réduction</SelectItem>
+        </SelectContent>
+      </Select>
       {discount > 0 && (
-        <p className="text-sm text-green-600 dark:text-green-400 italic">
+        <p className="text-sm text-muted-foreground">
           Une réduction de {discount}% sera appliquée au total
         </p>
       )}

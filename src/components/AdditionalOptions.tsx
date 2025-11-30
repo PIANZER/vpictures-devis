@@ -2,7 +2,7 @@ import React from "react";
 import {PriceModifier, ProjectType} from "../types";
 import {ADDITIONAL_OPTIONS} from "../config/appConfig";
 import {Tooltip} from "./Tooltip";
-import "./AdditionalOptions.css";
+import {Switch} from "./ui/switch";
 
 interface AdditionalOptionsProps {
   priceModifiers: PriceModifier;
@@ -26,26 +26,27 @@ export const AdditionalOptions: React.FC<AdditionalOptionsProps> = ({
   });
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-2">
       {availableOptions.map((option) => (
         <div
           key={option.id}
-          className="flex items-center justify-between border-2 border-cyan-200 dark:border-cyan-700 rounded p-3 bg-white dark:bg-gray-800"
+          className="flex items-center justify-between space-x-4 rounded-lg border p-4 hover:bg-accent transition-colors"
         >
-          <label className="flex items-center gap-3 cursor-pointer w-full">
-            <input
-              type="checkbox"
+          <label className="flex items-center gap-3 cursor-pointer flex-1">
+            <Switch
               checked={priceModifiers[option.id] || false}
-              onChange={(e) =>
-                onChange({...priceModifiers, [option.id]: e.target.checked})
+              onCheckedChange={(checked) =>
+                onChange({...priceModifiers, [option.id]: checked})
               }
             />
-            <div className="flex items-center">
-              <span className="text-lg dark:text-white">{option.label}</span>
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                {option.label}
+              </span>
               {option.description && <Tooltip text={option.description} />}
             </div>
           </label>
-          <span className="font-bold text-lg text-green-500 dark:text-green-400">
+          <span className="text-sm font-semibold text-muted-foreground">
             +{option.price}€
           </span>
         </div>

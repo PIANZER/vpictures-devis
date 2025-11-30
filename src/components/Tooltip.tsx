@@ -12,7 +12,7 @@ export const Tooltip: React.FC<TooltipProps> = ({text}) => {
     <div className="relative inline-block">
       <button
         type="button"
-        className="ml-2 text-cyan-500 hover:text-cyan-700 transition-colors"
+        className="inline-flex items-center justify-center text-sm font-medium transition-colors hover:text-accent-foreground h-4 w-4 text-muted-foreground"
         onMouseEnter={() => setIsVisible(true)}
         onMouseLeave={() => setIsVisible(false)}
         onClick={(e) => {
@@ -20,12 +20,12 @@ export const Tooltip: React.FC<TooltipProps> = ({text}) => {
           setIsVisible(!isVisible);
         }}
       >
-        <Info className="w-4 h-4" />
+        <Info className="h-4 w-4" />
       </button>
 
       {isVisible && (
-        <div className="absolute z-50 left-0 bottom-full mb-2 w-64 p-3 bg-gray-900 dark:bg-gray-800 text-white text-sm rounded-lg shadow-lg">
-          <div className="absolute left-4 top-full w-0 h-0 border-l-8 border-r-8 border-t-8 border-transparent border-t-gray-900 dark:border-t-gray-800"></div>
+        <div className="absolute z-50 left-0 bottom-full mb-2 w-64 rounded-md border bg-popover px-3 py-2 text-sm text-popover-foreground shadow-md">
+          <div className="absolute left-4 top-full w-0 h-0 border-l-8 border-r-8 border-t-8 border-transparent border-t-border"></div>
           {text}
         </div>
       )}

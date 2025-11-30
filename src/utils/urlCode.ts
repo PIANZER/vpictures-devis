@@ -36,7 +36,13 @@ export function generateDevisCode(data: DevisData): string {
   if (data.priceModifiers.watermark) optionsBits |= 8;
   if (data.priceModifiers.fastDelivery) optionsBits |= 16;
   if (data.priceModifiers.verticalFormat) optionsBits |= 32;
+  if (data.priceModifiers.subtitles) optionsBits |= 64;
   parts.push(optionsBits.toString(36));
+
+  // Discount si présent
+  if (data.priceModifiers.discount && data.priceModifiers.discount > 0) {
+    parts.push(data.priceModifiers.discount.toString(36));
+  }
 
   // Joindre avec un séparateur court
   return parts.join("-");
@@ -69,6 +75,9 @@ export function parseDevisCode(code: string): Partial<DevisData> | null {
     // Options booléennes (cinquième élément)
     const optionsBits = parseInt(parts[4], 36);
 
+    // Discount (sixième élément optionnel)
+    const discount = parts.length > 5 ? parseInt(parts[5], 36) : 0;
+
     return {
       selectedTypes,
       priceModifiers: {
@@ -81,6 +90,8 @@ export function parseDevisCode(code: string): Partial<DevisData> | null {
         watermark: (optionsBits & 8) !== 0,
         fastDelivery: (optionsBits & 16) !== 0,
         verticalFormat: (optionsBits & 32) !== 0,
+        subtitles: (optionsBits & 64) !== 0,
+        discount,
       },
     };
   } catch (error) {

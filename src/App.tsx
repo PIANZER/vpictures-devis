@@ -4,7 +4,6 @@ import {
   calculateDeliveryTime,
   calculateTotal,
   getMinimumPriceWarning,
-  calculateDeposit,
 } from "./utils/calculations";
 import {decodeDevisFromUrl, generateDevisUrl} from "./utils/urlCode";
 import {ProjectTypeSelector} from "./components/ProjectTypeSelector";
@@ -12,11 +11,15 @@ import {PriceSlider} from "./components/PriceSlider";
 import {AdditionalOptions} from "./components/AdditionalOptions";
 import {DeliveryInfo} from "./components/DeliveryInfo";
 import {CopyDevisButton} from "./components/CopyDevisButton";
+import {DiscountSelector} from "./components/DiscountSelector";
+import {DarkModeToggle} from "./components/DarkModeToggle";
+import {useDarkMode} from "./hooks/useDarkMode";
 import logo from "./assets/logo.svg";
 import background from "./assets/background.png";
 import {SLIDER_CONFIGS, PRICES} from "./config/appConfig";
 
 function App() {
+  const {isDark, setIsDark} = useDarkMode();
   const [selectedTypes, setSelectedTypes] = useState<ProjectType[]>([]);
   const [priceModifiers, setPriceModifiers] = useState<PriceModifier>({
     actors: 0,
@@ -28,6 +31,8 @@ function App() {
     watermark: false,
     fastDelivery: false,
     verticalFormat: false,
+    subtitles: false,
+    discount: 0,
   });
 
   // Charger les données depuis l'URL au démarrage
@@ -45,7 +50,16 @@ function App() {
     selectedTypes.length === 1 && selectedTypes[0] === "social";
   const hasGroup = selectedTypes.includes("group");
   const total = calculateTotal(selectedTypes, priceModifiers);
-  const deposit = calculateDeposit(total, isSocialOnly);
+
+  // Calculer le prix sans réduction pour l'affichage
+  const totalWithoutDiscount =
+    priceModifiers.discount && priceModifiers.discount > 0
+      ? {
+          min: total.min / (1 - priceModifiers.discount / 100),
+          max: total.max / (1 - priceModifiers.discount / 100),
+        }
+      : null;
+
   const deliveryTime = calculateDeliveryTime(
     priceModifiers.duration,
     isSocialOnly,
@@ -89,9 +103,18 @@ function App() {
       step: SLIDER_CONFIGS.DURATION[isSocialOnly ? "SOCIAL" : "DEFAULT"].step,
       onChange: (value: number) =>
         setPriceModifiers({...priceModifiers, duration: value}),
-      price:
-        Math.ceil((priceModifiers.duration * 60) / 30) *
-        (isSocialOnly ? PRICES.TIME_RATES.SOCIAL : PRICES.TIME_RATES.DEFAULT),
+      price: {
+        min:
+          Math.ceil((priceModifiers.duration * 60) / 30) *
+          (isSocialOnly
+            ? PRICES.TIME_RATES.SOCIAL.min
+            : PRICES.TIME_RATES.DEFAULT.min),
+        max:
+          Math.ceil((priceModifiers.duration * 60) / 30) *
+          (isSocialOnly
+            ? PRICES.TIME_RATES.SOCIAL.max
+            : PRICES.TIME_RATES.DEFAULT.max),
+      },
     },
     {
       label: "Nombre de doubleurs",
@@ -102,7 +125,10 @@ function App() {
       step: SLIDER_CONFIGS.ACTORS.step,
       onChange: (value: number) =>
         setPriceModifiers({...priceModifiers, actors: value}),
-      price: priceModifiers.actors * PRICES.ACTOR,
+      price: {
+        min: priceModifiers.actors * PRICES.ACTOR.min,
+        max: priceModifiers.actors * PRICES.ACTOR.max,
+      },
     },
     {
       label: "Nombre de figurants",
@@ -122,17 +148,17 @@ function App() {
 
   return (
     <div
-      className="min-h-screen bg-center bg-no-repeat bg-fixed bg-cover md:bg-[length:800px_auto]"
+      className="min-h-screen bg-center bg-no-repeat bg-fixed bg-cover md:bg-[length:800px_auto] dark:bg-gray-900"
       style={{
-        backgroundImage: "url(" + background + ")",
+        backgroundImage: isDark ? "none" : "url(" + background + ")",
       }}
     >
-      <div className="min-h-screen p-8">
+      <div className="min-h-screen p-8 dark:bg-gray-900">
         <div className="max-w-3xl mx-auto">
           <div className="mb-12">
             <div className="flex flex-col items-center mb-6 md:flex-row md:justify-between">
               <div className="flex flex-col-reverse items-center md:flex-row md:items-center">
-                <h1 className="text-3xl mt-4 md:mt-0 md:text-5xl font-bold text-cyan-500 tracking-wider text-center md:text-left">
+                <h1 className="text-3xl mt-4 md:mt-0 md:text-5xl font-bold text-cyan-500 dark:text-cyan-400 tracking-wider text-center md:text-left">
                   SIMULATEUR DE DEVIS
                 </h1>
                 <div className="flex items-center md:ml-4">
@@ -143,8 +169,12 @@ function App() {
                   />
                 </div>
               </div>
+              <DarkModeToggle
+                isDark={isDark}
+                onToggle={() => setIsDark(!isDark)}
+              />
             </div>
-            <div className="space-y-2 text-gray-600 italic">
+            <div className="space-y-2 text-gray-600 dark:text-gray-300 italic">
               <p>
                 Ce simulateur n'a pour but que de vous donner une estimation de
                 Tarif moyen que nous serions amenées a vous proposer.
@@ -174,25 +204,40 @@ function App() {
                   onChange={setPriceModifiers}
                   selectedTypes={selectedTypes}
                 />{" "}
+                <DiscountSelector
+                  discount={priceModifiers.discount || 0}
+                  onChange={(discount) =>
+                    setPriceModifiers({...priceModifiers, discount})
+                  }
+                />{" "}
                 <DeliveryInfo
                   deliveryTime={deliveryTime}
                   priceWarning={priceWarning}
                   isFastDelivery={priceModifiers.fastDelivery}
                 />
-                {!isSocialOnly && deposit > 0 && (
-                  <div className="flex justify-between items-center pt-4 border-t border-cyan-100">
-                    <span className="text-xl font-semibold text-gray-700">
-                      Accompte (35%) :
+                {totalWithoutDiscount && (
+                  <div className="flex justify-between items-center pt-4 border-t border-cyan-100 dark:border-cyan-800">
+                    <span className="text-xl font-semibold text-gray-700 dark:text-gray-300">
+                      Prix avant réduction :
                     </span>
-                    <span className="text-2xl font-bold text-orange-500">
-                      {deposit.toFixed(2)}€
+                    <span className="text-2xl font-bold text-gray-500 dark:text-gray-400 line-through">
+                      {totalWithoutDiscount.min.toFixed(2)}€ -{" "}
+                      {totalWithoutDiscount.max.toFixed(2)}€
                     </span>
                   </div>
                 )}{" "}
-                <div className="flex justify-between items-center pt-6 mt-8 border-t-2 border-cyan-200">
-                  <span className="text-2xl font-bold">Total TTC :</span>
-                  <span className="text-4xl font-bold text-cyan-600">
-                    {total.toFixed(2)}€
+                <div className="flex justify-between items-center pt-6 mt-8 border-t-2 border-cyan-200 dark:border-cyan-700">
+                  <span className="text-2xl font-bold dark:text-white">
+                    Total TTC
+                    {priceModifiers.discount && priceModifiers.discount > 0 && (
+                      <span className="text-green-500 dark:text-green-400 ml-2">
+                        (-{priceModifiers.discount}%)
+                      </span>
+                    )}
+                    :
+                  </span>
+                  <span className="text-4xl font-bold text-cyan-600 dark:text-cyan-400">
+                    {total.min.toFixed(2)}€ - {total.max.toFixed(2)}€
                   </span>
                 </div>{" "}
                 {/* Bouton de copie du devis */}

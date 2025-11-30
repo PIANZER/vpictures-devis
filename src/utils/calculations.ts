@@ -33,72 +33,94 @@ export const calculateDeliveryTime = (
 export const calculateTotal = (
   selectedTypes: ProjectType[],
   priceModifiers: PriceModifier
-): number => {
+): {min: number; max: number} => {
   // Calculer d'abord le prix de base sans les modificateurs de type
-  let baseTotal = 0;
+  let minTotal = 0;
+  let maxTotal = 0;
 
   // Prix du temps
   const isTikTok = selectedTypes.includes("social");
-  const timeRate = isTikTok
-    ? PRICES.TIME_RATES.SOCIAL
-    : PRICES.TIME_RATES.DEFAULT;
-  baseTotal += Math.ceil((priceModifiers.duration * 60) / 30) * timeRate;
+  const segments = Math.ceil((priceModifiers.duration * 60) / 30);
 
-  // Prix des acteurs
-  baseTotal += priceModifiers.actors * PRICES.ACTOR;
+  if (isTikTok) {
+    minTotal += segments * PRICES.TIME_RATES.SOCIAL.min;
+    maxTotal += segments * PRICES.TIME_RATES.SOCIAL.max;
+  } else {
+    minTotal += segments * PRICES.TIME_RATES.DEFAULT.min;
+    maxTotal += segments * PRICES.TIME_RATES.DEFAULT.max;
+  } // Prix des acteurs
+  minTotal += priceModifiers.actors * PRICES.ACTOR.min;
+  maxTotal += priceModifiers.actors * PRICES.ACTOR.max;
 
-  // Prix des figurants (3 premiers gratuits)
+  // Prix des figurants (2 premiers gratuits)
   const extrasCount = Math.max(0, priceModifiers.extras - PRICES.FREE_EXTRAS);
-  baseTotal += extrasCount * PRICES.EXTRA;
+  minTotal += extrasCount * PRICES.EXTRA;
+  maxTotal += extrasCount * PRICES.EXTRA;
+
   // Services additionnels - utiliser les références aux prix centralisés
-  if (priceModifiers.shootingServer)
-    baseTotal += PRICES.ADDITIONAL_SERVICES.SHOOTING_SERVER;
-  if (priceModifiers.guideline)
-    baseTotal += PRICES.ADDITIONAL_SERVICES.GUIDELINE;
-  if (priceModifiers.script) baseTotal += PRICES.ADDITIONAL_SERVICES.SCRIPT;
-  if (priceModifiers.watermark)
-    baseTotal += PRICES.ADDITIONAL_SERVICES.WATERMARK_REMOVAL;
-  if (priceModifiers.fastDelivery)
-    baseTotal += PRICES.ADDITIONAL_SERVICES.FAST_DELIVERY;
-  if (priceModifiers.verticalFormat)
-    baseTotal += PRICES.ADDITIONAL_SERVICES.VERTICAL_FORMAT;
+  if (priceModifiers.shootingServer) {
+    minTotal += PRICES.ADDITIONAL_SERVICES.SHOOTING_SERVER;
+    maxTotal += PRICES.ADDITIONAL_SERVICES.SHOOTING_SERVER;
+  }
+  if (priceModifiers.guideline) {
+    minTotal += PRICES.ADDITIONAL_SERVICES.GUIDELINE;
+    maxTotal += PRICES.ADDITIONAL_SERVICES.GUIDELINE;
+  }
+  if (priceModifiers.script) {
+    minTotal += PRICES.ADDITIONAL_SERVICES.SCRIPT;
+    maxTotal += PRICES.ADDITIONAL_SERVICES.SCRIPT;
+  }
+  if (priceModifiers.watermark) {
+    minTotal += PRICES.ADDITIONAL_SERVICES.WATERMARK_REMOVAL;
+    maxTotal += PRICES.ADDITIONAL_SERVICES.WATERMARK_REMOVAL;
+  }
+  if (priceModifiers.fastDelivery) {
+    minTotal += PRICES.ADDITIONAL_SERVICES.FAST_DELIVERY;
+    maxTotal += PRICES.ADDITIONAL_SERVICES.FAST_DELIVERY;
+  }
+  if (priceModifiers.verticalFormat) {
+    minTotal += PRICES.ADDITIONAL_SERVICES.VERTICAL_FORMAT;
+    maxTotal += PRICES.ADDITIONAL_SERVICES.VERTICAL_FORMAT;
+  }
+  if (priceModifiers.subtitles) {
+    minTotal += PRICES.ADDITIONAL_SERVICES.SUBTITLES;
+    maxTotal += PRICES.ADDITIONAL_SERVICES.SUBTITLES;
+  }
 
   // Appliquer le modificateur de pourcentage du type de projet
-  let finalTotal = baseTotal;
   selectedTypes.forEach((type) => {
     const projectType = PROJECT_TYPES.find((pt) => pt.id === type);
     if (projectType) {
       // Appliquer le modificateur de pourcentage
-      finalTotal *= 1 + projectType.percentageModifier / 100;
+      minTotal *= 1 + projectType.percentageModifier / 100;
+      maxTotal *= 1 + projectType.percentageModifier / 100;
     }
   });
 
-  return finalTotal;
+  // Appliquer la réduction si applicable
+  if (priceModifiers.discount) {
+    minTotal *= 1 - priceModifiers.discount / 100;
+    maxTotal *= 1 - priceModifiers.discount / 100;
+  }
+
+  return {min: minTotal, max: maxTotal};
 };
 
 export const getMinimumPriceWarning = (
-  total: number,
+  total: {min: number; max: number},
   isSocialOnly: boolean,
   hasGroup: boolean
 ): string | null => {
-  if (isSocialOnly && total < MINIMUM_PRICES.SOCIAL) {
+  const minPrice = total.min;
+
+  if (isSocialOnly && minPrice < MINIMUM_PRICES.SOCIAL) {
     return `Le prix minimum pour un format TikTok/Instagram est de ${MINIMUM_PRICES.SOCIAL}€`;
   }
-  if (hasGroup && total < MINIMUM_PRICES.GROUP) {
+  if (hasGroup && minPrice < MINIMUM_PRICES.GROUP) {
     return `Le prix minimum pour une présentation de personnage est de ${MINIMUM_PRICES.GROUP}€`;
   }
-  if (!isSocialOnly && !hasGroup && total < MINIMUM_PRICES.DEFAULT) {
+  if (!isSocialOnly && !hasGroup && minPrice < MINIMUM_PRICES.DEFAULT) {
     return `Le prix minimum pour ce type de contenu est de ${MINIMUM_PRICES.DEFAULT}€`;
   }
   return null;
-};
-
-export const calculateDeposit = (
-  total: number,
-  isTiktokOnly: boolean
-): number => {
-  if (isTiktokOnly) {
-    return 0; // Pas d'accompte pour TikTok
-  }
-  return total * 0.35; // 35% d'accompte
 };

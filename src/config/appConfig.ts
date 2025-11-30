@@ -27,10 +27,10 @@ export const PROJECT_TYPES: ProjectTypeInfo[] = [
 // Centralisation de tous les prix dans une structure unique
 export const PRICES = {
   TIME_RATES: {
-    DEFAULT: 20, // Prix par segment de 30 secondes pour contenu standard
-    SOCIAL: 20, // Prix par segment de 30 secondes pour contenu social
+    DEFAULT: {min: 20, max: 40}, // Fourchette de prix par segment de 30 secondes pour contenu standard
+    SOCIAL: {min: 20, max: 40}, // Fourchette de prix par segment de 30 secondes pour contenu social
   },
-  ACTOR: 15, // Prix par acteur
+  ACTOR: {min: 15, max: 25}, // Fourchette de prix par acteur
   EXTRA: 5, // Prix par figurant
   FREE_EXTRAS: 2, // Nombre de figurants gratuits
   ADDITIONAL_SERVICES: {
@@ -40,6 +40,7 @@ export const PRICES = {
     WATERMARK_REMOVAL: 40, // Prix pour retrait du logo VPictures
     FAST_DELIVERY: 70, // Prix pour la livraison rapide
     VERTICAL_FORMAT: 15, // Prix pour le format vertical
+    SUBTITLES: 10, // Prix pour le sous-titrage (TikTok uniquement)
   },
   FAST_DELIVERY_FACTOR: 0.5, // Facteur de réduction du temps pour livraison rapide
 };
@@ -83,32 +84,52 @@ export const ADDITIONAL_OPTIONS: AdditionalOption[] = [
     id: "shootingServer",
     label: "Serveur de tournage",
     price: PRICES.ADDITIONAL_SERVICES.SHOOTING_SERVER,
+    description:
+      "Mise à disposition d'un serveur privé pour réaliser votre tournage dans les meilleures conditions.",
   },
   {
     id: "guideline",
     label: "Création de la ligne directrice",
     price: PRICES.ADDITIONAL_SERVICES.GUIDELINE,
+    description:
+      "Élaboration d'un document détaillant l'orientation créative et les choix artistiques de votre projet.",
   },
   {
     id: "script",
     label: "Création du script",
     price: PRICES.ADDITIONAL_SERVICES.SCRIPT,
+    description:
+      "Rédaction complète du scénario avec dialogues et indications scéniques pour votre vidéo.",
   },
   {
     id: "watermark",
     label: "Retrait du logo VPictures",
     price: PRICES.ADDITIONAL_SERVICES.WATERMARK_REMOVAL,
+    description:
+      "Suppression du filigrane VPictures sur votre vidéo finale pour un rendu 100% personnalisé.",
   },
   {
     id: "fastDelivery",
     label: "Livraison rapide",
     price: PRICES.ADDITIONAL_SERVICES.FAST_DELIVERY,
+    description:
+      "Réduction de 50% du délai de livraison standard pour obtenir votre vidéo plus rapidement.",
   },
   {
     id: "verticalFormat",
     label: "Format vertical",
     price: PRICES.ADDITIONAL_SERVICES.VERTICAL_FORMAT,
     excludeForTiktok: true,
+    description:
+      "Adaptation de votre vidéo au format vertical (9:16) idéal pour les réseaux sociaux mobiles.",
+  },
+  {
+    id: "subtitles",
+    label: "Sous-titrage",
+    price: PRICES.ADDITIONAL_SERVICES.SUBTITLES,
+    onlyForTiktok: true,
+    description:
+      "Ajout de sous-titres dynamiques et stylisés pour une meilleure accessibilité et engagement.",
   },
 ];
 

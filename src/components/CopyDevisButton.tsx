@@ -53,8 +53,8 @@ export function CopyDevisButton({selectedTypes}: CopyDevisButtonProps) {
           px-6 py-3 rounded-lg font-semibold text-white transition-all duration-200
           ${
             isCopied
-              ? "bg-green-500 hover:bg-green-600"
-              : "bg-cyan-500 hover:bg-cyan-600"
+              ? "bg-green-500 hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700"
+              : "bg-cyan-500 hover:bg-cyan-600 dark:bg-cyan-600 dark:hover:bg-cyan-700"
           }
           ${
             isLoading
@@ -91,7 +91,7 @@ export function CopyDevisButton({selectedTypes}: CopyDevisButtonProps) {
         )}
       </button>
 
-      <p className="text-sm text-gray-500 text-center max-w-md">
+      <p className="text-sm text-gray-500 dark:text-gray-400 text-center max-w-md">
         Partagez ce lien sur votre ticket Discord pour que les admins puissent
         voir votre devis et vous aider à le finaliser.
       </p>

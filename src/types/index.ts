@@ -10,6 +10,8 @@ export interface PriceModifier {
   watermark: boolean;
   fastDelivery: boolean;
   verticalFormat: boolean;
+  subtitles?: boolean;
+  discount?: number;
 }
 
 export interface ProjectTypeInfo {
@@ -26,7 +28,12 @@ export interface SliderConfig {
   max: number;
   step: number;
   onChange: (value: number) => void;
-  price: number;
+  price: number | {min: number; max: number};
+}
+
+export interface PriceRange {
+  min: number;
+  max: number;
 }
 
 export interface AdditionalOption {
@@ -38,8 +45,11 @@ export interface AdditionalOption {
     | "watermark"
     | "fastDelivery"
     | "verticalFormat"
+    | "subtitles"
   >;
   label: string;
   price: number;
   excludeForTiktok?: boolean;
+  onlyForTiktok?: boolean;
+  description?: string;
 }

@@ -254,7 +254,7 @@ function App() {
                       Acompte à la commande (35%)
                     </span>
                     <span className="text-lg font-bold text-muted-foreground">
-                      {deposit.min.toFixed(2)}€ - {deposit.max.toFixed(2)}€
+                      {deposit.max.toFixed(2)}€
                     </span>
                   </div>
                 )}
@@ -266,7 +266,6 @@ function App() {
                       Prix avant réduction
                     </span>
                     <span className="text-lg font-bold text-muted-foreground line-through">
-                      {totalWithoutDiscount.min.toFixed(2)}€ -{" "}
                       {totalWithoutDiscount.max.toFixed(2)}€
                     </span>
                   </div>
@@ -284,7 +283,7 @@ function App() {
                     )}
                   </div>
                   <span className="text-3xl font-bold tracking-tighter">
-                    {total.min.toFixed(2)}€ - {total.max.toFixed(2)}€
+                    {total.max.toFixed(2)}€
                   </span>
                 </div>
               </div>
